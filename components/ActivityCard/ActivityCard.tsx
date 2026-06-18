@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import type { Activity } from "@/types/activity";
+import { useParam } from "@/hooks/useParam";
 import { getAvailability } from "@/utils/activities";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
@@ -11,11 +12,11 @@ import styles from "./ActivityCard.module.css";
 
 interface ActivityCardProps {
   activity: Activity;
-  onBook: (activity: Activity) => void;
 }
 
-export default function ActivityCard({ activity, onBook }: ActivityCardProps) {
+export default function ActivityCard({ activity }: ActivityCardProps) {
   const [imageFailed, setImageFailed] = useState(false);
+  const [, openModal] = useParam("modal", activity.id);
   const showImage = Boolean(activity.imageUrl) && !imageFailed;
   const availability = getAvailability(activity);
   const isSoldOut = availability === "sold-out";
@@ -95,7 +96,7 @@ export default function ActivityCard({ activity, onBook }: ActivityCardProps) {
           <Button
             variant="primary"
             className={styles.bookButton}
-            onClick={() => onBook(activity)}
+            onClick={() => openModal(true)}
             disabled={isSoldOut}
             aria-disabled={isSoldOut}
           >

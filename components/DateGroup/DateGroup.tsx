@@ -5,14 +5,9 @@ import styles from "./DateGroup.module.css";
 interface DateGroupProps {
   label: string;
   activities: Activity[];
-  onBook: (activity: Activity) => void;
 }
 
-export default function DateGroup({
-  label,
-  activities,
-  onBook,
-}: DateGroupProps) {
+export default function DateGroup({ label, activities }: DateGroupProps) {
   return (
     <section className={styles.group}>
       <header className={styles.header}>
@@ -25,7 +20,7 @@ export default function DateGroup({
       <ul className={styles.cards} role="list">
         {activities.map((activity) => (
           <li key={activity.id}>
-            <ActivityCard activity={activity} onBook={onBook} />
+            <ActivityCard activity={activity} />
           </li>
         ))}
       </ul>
