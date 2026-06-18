@@ -1,0 +1,16 @@
+.badge {
+  display: inline-block;
+  padding: 2px var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #fff;
+  line-height: 1.6;
+}
+
+.badge--rondleiding   { background: var(--badge-rondleiding); }
+.badge--workshop      { background: var(--badge-workshop); }
+.badge--lezing        { background: var(--badge-lezing); }
+.badge--kinderprogramma { background: var(--badge-kinderprogramma); }

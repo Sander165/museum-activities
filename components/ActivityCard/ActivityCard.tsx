@@ -1,13 +1,9 @@
 import type { Activity } from "@/types/activity";
 import { getAvailability } from "@/utils/activities";
+import Badge from "@/components/ui/Badge";
+import Button from "@/components/ui/Button";
+import LocationPinIcon from "@/components/ui/icons/LocationPinIcon";
 import styles from "./ActivityCard.module.css";
-
-const TYPE_LABELS: Record<Activity["type"], string> = {
-  rondleiding: "Rondleiding",
-  workshop: "Workshop",
-  lezing: "Lezing",
-  kinderprogramma: "Kinderprogramma",
-};
 
 interface ActivityCardProps {
   activity: Activity;
@@ -44,11 +40,7 @@ export default function ActivityCard({ activity, onBook }: ActivityCardProps) {
     >
       <div className={styles.body}>
         <div className={styles.meta}>
-          <span
-            className={`${styles.badge} ${styles[`badge--${activity.type}`]}`}
-          >
-            {TYPE_LABELS[activity.type]}
-          </span>
+          <Badge type={activity.type} />
           <time className={styles.time}>
             {activity.startTime} – {activity.endTime}
           </time>
@@ -63,32 +55,21 @@ export default function ActivityCard({ activity, onBook }: ActivityCardProps) {
         <div className={styles.footer}>
           <div className={styles.footerMeta}>
             <span className={styles.location}>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                aria-hidden="true"
-              >
-                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
-                <circle cx="12" cy="9" r="2.5" />
-              </svg>
+              <LocationPinIcon />
               {activity.location}
             </span>
             {renderAvailability()}
           </div>
 
-          <button
-            type="button"
+          <Button
+            variant="primary"
             className={styles.bookButton}
             onClick={() => onBook(activity)}
             disabled={isSoldOut}
             aria-disabled={isSoldOut}
           >
             {isSoldOut ? "Vol" : "Reserveer"}
-          </button>
+          </Button>
         </div>
       </div>
     </article>

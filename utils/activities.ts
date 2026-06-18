@@ -1,5 +1,12 @@
-import type { Activity } from "@/types/activity";
+import type { Activity, ActivityType } from "@/types/activity";
 import { formatDutchDate } from "@/utils/date";
+
+export const TYPE_LABELS: Record<ActivityType, string> = {
+  rondleiding: "Rondleiding",
+  workshop: "Workshop",
+  lezing: "Lezing",
+  kinderprogramma: "Kinderprogramma",
+};
 
 export type AvailabilityState = "available" | "almost-full" | "sold-out";
 

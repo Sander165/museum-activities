@@ -6,14 +6,11 @@ import { getAvailability } from "@/utils/activities";
 import { capitalise } from "@/utils/string";
 import { formatDutchDate } from "@/utils/date";
 import { isValidEmail } from "@/utils/validation";
+import Badge from "@/components/ui/Badge";
+import Button from "@/components/ui/Button";
+import CloseIcon from "@/components/ui/icons/CloseIcon";
+import LocationPinIcon from "@/components/ui/icons/LocationPinIcon";
 import styles from "./BookingModal.module.css";
-
-const TYPE_LABELS: Record<Activity["type"], string> = {
-  rondleiding: "Rondleiding",
-  workshop: "Workshop",
-  lezing: "Lezing",
-  kinderprogramma: "Kinderprogramma",
-};
 
 export type BookingDetails = {
   activity: Activity;
@@ -50,20 +47,17 @@ export default function BookingModal({
   const confirmHeadingRef = useRef<HTMLHeadingElement>(null);
   const triggerRef = useRef<Element | null>(null);
 
-  // Remember what had focus before opening so we can restore it on close
   useEffect(() => {
     triggerRef.current = document.activeElement;
     dialogRef.current?.focus();
   }, []);
 
-  // Move focus to confirmation heading after step change
   useEffect(() => {
     if (step === "confirmed") {
       confirmHeadingRef.current?.focus();
     }
   }, [step]);
 
-  // Close on Escape
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") handleClose();
@@ -72,7 +66,6 @@ export default function BookingModal({
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Lock body scroll while open
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -129,35 +122,21 @@ export default function BookingModal({
         tabIndex={-1}
       >
         {/* ── Close button ── */}
-        <button
-          type="button"
+        <Button
+          variant="icon"
           className={styles.closeButton}
           onClick={handleClose}
           aria-label="Sluit venster"
         >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            aria-hidden="true"
-          >
-            <path d="M18 6 6 18M6 6l12 12" />
-          </svg>
-        </button>
+          <CloseIcon />
+        </Button>
 
         {step === "form" ? (
           <>
             {/* ── Activity detail ── */}
             <div className={styles.detail}>
               <div className={styles.detailMeta}>
-                <span
-                  className={`${styles.badge} ${styles[`badge--${activity.type}`]}`}
-                >
-                  {TYPE_LABELS[activity.type]}
-                </span>
+                <Badge type={activity.type} />
                 <span className={styles.detailDate}>
                   {dateLabel} · {activity.startTime} – {activity.endTime}
                 </span>
@@ -168,18 +147,7 @@ export default function BookingModal({
               </h2>
 
               <p className={styles.detailLocation}>
-                <svg
-                  width="13"
-                  height="13"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  aria-hidden="true"
-                >
-                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
-                  <circle cx="12" cy="9" r="2.5" />
-                </svg>
+                <LocationPinIcon width={13} height={13} />
                 {activity.location}
               </p>
 
@@ -285,9 +253,9 @@ export default function BookingModal({
                 )}
               </div>
 
-              <button type="submit" className={styles.submitButton}>
+              <Button type="submit" className={styles.submitButton}>
                 Bevestig reservering
-              </button>
+              </Button>
 
               <p className={styles.disclaimer}>
                 Je ontvangt een bevestiging per e-mail. Gratis annuleren tot 24
@@ -332,20 +300,12 @@ export default function BookingModal({
             )}
 
             <div className={styles.confirmationActions}>
-              <button
-                type="button"
-                className={styles.secondaryButton}
-                onClick={handleClose}
-              >
+              <Button variant="secondary" onClick={handleClose}>
                 Terug naar overzicht
-              </button>
-              <button
-                type="button"
-                className={styles.primaryButton}
-                onClick={handleClose}
-              >
+              </Button>
+              <Button variant="primary" onClick={handleClose}>
                 Nog een activiteit
-              </button>
+              </Button>
             </div>
           </div>
         )}
