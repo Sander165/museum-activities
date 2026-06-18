@@ -1,6 +1,7 @@
 import activitiesData from "@/data/activities.json";
 import type { ActivitiesData } from "@/types/activity";
 import Header from "@/components/Header/Header";
+import ActivityBrowser from "@/components/ActivityBrowser/ActivityBrowser";
 
 const { activities } = activitiesData as ActivitiesData;
 
@@ -9,10 +10,7 @@ export default function Home() {
     <>
       <Header />
       <main>
-        {/* ActivityBrowser (client) goes here — plan 02 + */}
-        <p style={{ padding: "2rem", color: "var(--color-text-muted)" }}>
-          {activities.length} activiteiten geladen.
-        </p>
+        <ActivityBrowser initialActivities={activities} />
       </main>
     </>
   );

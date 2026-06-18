@@ -1,0 +1,15 @@
+.browser {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: var(--space-8) var(--content-padding) var(--space-16);
+}
+
+.controls {
+  margin-bottom: var(--space-8);
+}
+
+.empty,
+.count {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
