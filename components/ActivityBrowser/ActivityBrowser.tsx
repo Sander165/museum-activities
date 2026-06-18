@@ -5,6 +5,7 @@ import type { Activity } from "@/types/activity";
 import TypeFilter, {
   type FilterValue,
 } from "@/components/TypeFilter/TypeFilter";
+import ActivityList from "@/components/ActivityList/ActivityList";
 import styles from "./ActivityBrowser.module.css";
 
 interface ActivityBrowserProps {
@@ -14,30 +15,25 @@ interface ActivityBrowserProps {
 export default function ActivityBrowser({
   initialActivities,
 }: ActivityBrowserProps) {
+  const [activities, setActivities] = useState<Activity[]>(initialActivities);
   const [activeFilter, setActiveFilter] = useState<FilterValue>("all");
 
   const visible =
     activeFilter === "all"
-      ? initialActivities
-      : initialActivities.filter((a) => a.type === activeFilter);
+      ? activities
+      : activities.filter((a) => a.type === activeFilter);
+
+  function handleBook(activity: Activity) {
+    // Booking modal — wired in plan 05
+    console.log("book", activity.id);
+  }
 
   return (
     <div className={styles.browser}>
       <div className={styles.controls}>
         <TypeFilter active={activeFilter} onChange={setActiveFilter} />
       </div>
-
-      {visible.length === 0 ? (
-        <p className={styles.empty}>
-          Geen activiteiten gevonden voor dit type.
-        </p>
-      ) : (
-        <p className={styles.count}>
-          {/* Placeholder — ActivityList replaces this in plan 03 */}
-          {visible.length} activiteit{visible.length !== 1 ? "en" : ""}{" "}
-          gevonden.
-        </p>
-      )}
+      <ActivityList activities={visible} onBook={handleBook} />
     </div>
   );
 }
