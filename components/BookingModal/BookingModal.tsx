@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import type { Activity } from "@/types/activity";
+import { useParam } from "@/hooks/useParam";
 import { getAvailability, pluraliseSpots } from "@/utils/activities";
 import { capitalise } from "@/utils/string";
 import { formatDutchDate } from "@/utils/date";
@@ -23,7 +24,6 @@ export type BookingDetails = {
 interface BookingModalProps {
   activity: Activity;
   onConfirm: (details: BookingDetails) => void;
-  onClose: () => void;
 }
 
 type FormErrors = {
@@ -35,7 +35,6 @@ type FormErrors = {
 export default function BookingModal({
   activity,
   onConfirm,
-  onClose,
 }: BookingModalProps) {
   const [step, setStep] = useState<"form" | "confirmed">("form");
   const [name, setName] = useState("");
@@ -44,9 +43,16 @@ export default function BookingModal({
   const [errors, setErrors] = useState<FormErrors>({});
   const [imageFailed, setImageFailed] = useState(false);
 
+  const [, setOpen] = useParam("modal", activity.id);
+
   const dialogRef = useRef<HTMLDivElement>(null);
   const confirmHeadingRef = useRef<HTMLHeadingElement>(null);
   const triggerRef = useRef<Element | null>(null);
+
+  const handleClose = useCallback(() => {
+    (triggerRef.current as HTMLElement | null)?.focus();
+    setOpen(false);
+  }, [setOpen]);
 
   useEffect(() => {
     triggerRef.current = document.activeElement;
@@ -60,18 +66,13 @@ export default function BookingModal({
       document.body.style.overflow = "";
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [handleClose]);
 
   useEffect(() => {
     if (step === "confirmed") {
       confirmHeadingRef.current?.focus();
     }
   }, [step]);
-
-  function handleClose() {
-    (triggerRef.current as HTMLElement | null)?.focus();
-    onClose();
-  }
 
   function validate(): boolean {
     const next: FormErrors = {};
