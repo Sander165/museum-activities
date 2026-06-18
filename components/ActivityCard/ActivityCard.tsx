@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import type { Activity } from "@/types/activity";
 import { getAvailability } from "@/utils/activities";
@@ -12,6 +15,8 @@ interface ActivityCardProps {
 }
 
 export default function ActivityCard({ activity, onBook }: ActivityCardProps) {
+  const [imageFailed, setImageFailed] = useState(false);
+  const showImage = Boolean(activity.imageUrl) && !imageFailed;
   const availability = getAvailability(activity);
   const isSoldOut = availability === "sold-out";
   const isAlmostFull = availability === "almost-full";
@@ -40,7 +45,7 @@ export default function ActivityCard({ activity, onBook }: ActivityCardProps) {
       className={`${styles.card} ${isSoldOut ? styles.cardSoldOut : ""}`}
       aria-label={activity.title}
     >
-      {activity.imageUrl && (
+      {showImage && activity.imageUrl && (
         <div className={styles.imageWrap}>
           <Image
             src={activity.imageUrl}
@@ -48,6 +53,7 @@ export default function ActivityCard({ activity, onBook }: ActivityCardProps) {
             fill
             sizes="(max-width: 600px) 100vw, 280px"
             className={styles.image}
+            onError={() => setImageFailed(true)}
           />
           <div className={styles.imageBadge}>
             <Badge type={activity.type} />
@@ -56,7 +62,7 @@ export default function ActivityCard({ activity, onBook }: ActivityCardProps) {
       )}
 
       <div className={styles.body}>
-        {!activity.imageUrl && (
+        {!showImage && (
           <div className={styles.meta}>
             <Badge type={activity.type} />
             <time className={styles.time}>
@@ -65,7 +71,7 @@ export default function ActivityCard({ activity, onBook }: ActivityCardProps) {
           </div>
         )}
 
-        {activity.imageUrl && (
+        {showImage && (
           <time className={styles.time}>
             {activity.startTime} – {activity.endTime}
           </time>

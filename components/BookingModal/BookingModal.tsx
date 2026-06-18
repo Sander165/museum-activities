@@ -42,6 +42,7 @@ export default function BookingModal({
   const [email, setEmail] = useState("");
   const [partySize, setPartySize] = useState(1);
   const [errors, setErrors] = useState<FormErrors>({});
+  const [imageFailed, setImageFailed] = useState(false);
 
   const dialogRef = useRef<HTMLDivElement>(null);
   const confirmHeadingRef = useRef<HTMLHeadingElement>(null);
@@ -94,6 +95,7 @@ export default function BookingModal({
   }
 
   const dateLabel = capitalise(formatDutchDate(activity.date));
+  const showImage = Boolean(activity.imageUrl) && !imageFailed;
   const availability = getAvailability(activity);
   const capacityPercent = Math.round(
     ((activity.capacity - activity.availableSpots) / activity.capacity) * 100,
@@ -116,13 +118,14 @@ export default function BookingModal({
       >
         {/* ── Hero (shared across steps) ── */}
         <div className={styles.hero}>
-          {activity.imageUrl ? (
+          {showImage && activity.imageUrl ? (
             <Image
               src={activity.imageUrl}
               alt=""
               fill
               sizes="560px"
               className={styles.heroImage}
+              onError={() => setImageFailed(true)}
             />
           ) : (
             <div className={styles.heroFallback} aria-hidden="true" />
