@@ -18,6 +18,10 @@ export function getAvailability(activity: Activity): AvailabilityState {
   return "available";
 }
 
+export function pluraliseSpots(n: number): string {
+  return `${n} ${n === 1 ? "plek" : "plekken"}`;
+}
+
 export type DateGroup = {
   date: string; // ISO "YYYY-MM-DD"
   label: string; // "zaterdag 20 juni 2026"

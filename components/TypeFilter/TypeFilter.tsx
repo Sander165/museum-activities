@@ -1,16 +1,17 @@
 "use client";
 
 import type { ActivityType } from "@/types/activity";
+import { TYPE_LABELS } from "@/utils/activities";
 import styles from "./TypeFilter.module.css";
 
 export type FilterValue = ActivityType | "all";
 
 const FILTERS: { value: FilterValue; label: string }[] = [
   { value: "all", label: "Alles" },
-  { value: "rondleiding", label: "Rondleiding" },
-  { value: "workshop", label: "Workshop" },
-  { value: "lezing", label: "Lezing" },
-  { value: "kinderprogramma", label: "Kinderprogramma" },
+  ...(Object.entries(TYPE_LABELS) as [ActivityType, string][]).map(([value, label]) => ({
+    value,
+    label,
+  })),
 ];
 
 interface TypeFilterProps {

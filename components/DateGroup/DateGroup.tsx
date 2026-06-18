@@ -13,14 +13,12 @@ export default function DateGroup({
   activities,
   onBook,
 }: DateGroupProps) {
-  const count = activities.length;
-
   return (
     <section className={styles.group}>
       <header className={styles.header}>
         <h2 className={styles.date}>{label}</h2>
         <span className={styles.count}>
-          {count} activiteit{count !== 1 ? "en" : ""}
+          {activities.length} activiteit{activities.length !== 1 ? "en" : ""}
         </span>
       </header>
 

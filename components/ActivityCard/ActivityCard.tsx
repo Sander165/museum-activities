@@ -1,5 +1,5 @@
 import type { Activity } from "@/types/activity";
-import { getAvailability } from "@/utils/activities";
+import { getAvailability, pluraliseSpots } from "@/utils/activities";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import LocationPinIcon from "@/components/ui/icons/LocationPinIcon";
@@ -13,25 +13,6 @@ interface ActivityCardProps {
 export default function ActivityCard({ activity, onBook }: ActivityCardProps) {
   const availability = getAvailability(activity);
   const isSoldOut = availability === "sold-out";
-
-  function renderAvailability() {
-    if (isSoldOut) {
-      return <span className={styles.soldOut}>Uitverkocht</span>;
-    }
-    if (availability === "almost-full") {
-      return (
-        <span className={styles.almostFull}>
-          Nog {activity.availableSpots}{" "}
-          {activity.availableSpots === 1 ? "plek" : "plekken"}
-        </span>
-      );
-    }
-    return (
-      <span className={styles.available}>
-        {activity.availableSpots} van {activity.capacity} plekken beschikbaar
-      </span>
-    );
-  }
 
   return (
     <article
@@ -58,7 +39,17 @@ export default function ActivityCard({ activity, onBook }: ActivityCardProps) {
               <LocationPinIcon />
               {activity.location}
             </span>
-            {renderAvailability()}
+            {isSoldOut ? (
+              <span className={styles.soldOut}>Uitverkocht</span>
+            ) : availability === "almost-full" ? (
+              <span className={styles.almostFull}>
+                Nog {pluraliseSpots(activity.availableSpots)}
+              </span>
+            ) : (
+              <span className={styles.available}>
+                {activity.availableSpots} van {activity.capacity} plekken beschikbaar
+              </span>
+            )}
           </div>
 
           <Button
@@ -66,7 +57,6 @@ export default function ActivityCard({ activity, onBook }: ActivityCardProps) {
             className={styles.bookButton}
             onClick={() => onBook(activity)}
             disabled={isSoldOut}
-            aria-disabled={isSoldOut}
           >
             {isSoldOut ? "Vol" : "Reserveer"}
           </Button>

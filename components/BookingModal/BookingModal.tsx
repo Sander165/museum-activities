@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Activity } from "@/types/activity";
-import { getAvailability } from "@/utils/activities";
+import { getAvailability, pluraliseSpots } from "@/utils/activities";
 import { capitalise } from "@/utils/string";
 import { formatDutchDate } from "@/utils/date";
 import { isValidEmail } from "@/utils/validation";
@@ -41,7 +41,6 @@ export default function BookingModal({
   const [email, setEmail] = useState("");
   const [partySize, setPartySize] = useState(1);
   const [errors, setErrors] = useState<FormErrors>({});
-  const [booking, setBooking] = useState<BookingDetails | null>(null);
 
   const dialogRef = useRef<HTMLDivElement>(null);
   const confirmHeadingRef = useRef<HTMLHeadingElement>(null);
@@ -50,6 +49,15 @@ export default function BookingModal({
   useEffect(() => {
     triggerRef.current = document.activeElement;
     dialogRef.current?.focus();
+    document.body.style.overflow = "hidden";
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") handleClose();
+    }
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = "";
+      document.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
 
   useEffect(() => {
@@ -57,21 +65,6 @@ export default function BookingModal({
       confirmHeadingRef.current?.focus();
     }
   }, [step]);
-
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") handleClose();
-    }
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, []);
-
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, []);
 
   function handleClose() {
     (triggerRef.current as HTMLElement | null)?.focus();
@@ -86,7 +79,7 @@ export default function BookingModal({
       next.email = "Vul een geldig e-mailadres in.";
     if (partySize < 1) next.partySize = "Minimaal 1 persoon.";
     else if (partySize > activity.availableSpots)
-      next.partySize = `Maximaal ${activity.availableSpots} ${activity.availableSpots === 1 ? "plek" : "plekken"} beschikbaar.`;
+      next.partySize = `Maximaal ${pluraliseSpots(activity.availableSpots)} beschikbaar.`;
     setErrors(next);
     return Object.keys(next).length === 0;
   }
@@ -95,7 +88,6 @@ export default function BookingModal({
     e.preventDefault();
     if (!validate()) return;
     const details: BookingDetails = { activity, name, email, partySize };
-    setBooking(details);
     onConfirm(details);
     setStep("confirmed");
   }
@@ -278,26 +270,21 @@ export default function BookingModal({
               Reservering bevestigd!
             </h2>
 
-            {booking && (
-              <div className={styles.confirmationSummary}>
-                <p className={styles.confirmationActivityTitle}>
-                  {booking.activity.title}
-                </p>
-                <p className={styles.confirmationMeta}>
-                  {capitalise(formatDutchDate(booking.activity.date))} ·{" "}
-                  {booking.activity.startTime} – {booking.activity.endTime}
-                </p>
-                <p className={styles.confirmationMeta}>
-                  {booking.partySize}{" "}
-                  {booking.partySize === 1 ? "persoon" : "personen"} ·{" "}
-                  {booking.activity.location}
-                </p>
-                <p className={styles.confirmationEmail}>
-                  Een bevestiging is verstuurd naar{" "}
-                  <strong>{booking.email}</strong>
-                </p>
-              </div>
-            )}
+            <div className={styles.confirmationSummary}>
+              <p className={styles.confirmationActivityTitle}>
+                {activity.title}
+              </p>
+              <p className={styles.confirmationMeta}>
+                {dateLabel} · {activity.startTime} – {activity.endTime}
+              </p>
+              <p className={styles.confirmationMeta}>
+                {partySize} {partySize === 1 ? "persoon" : "personen"} ·{" "}
+                {activity.location}
+              </p>
+              <p className={styles.confirmationEmail}>
+                Een bevestiging is verstuurd naar <strong>{email}</strong>
+              </p>
+            </div>
 
             <div className={styles.confirmationActions}>
               <Button variant="secondary" onClick={handleClose}>
