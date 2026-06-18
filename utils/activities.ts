@@ -28,7 +28,6 @@ export type DateGroup = {
   activities: Activity[];
 };
 
-/** Group activities by date and sort both dates and activities chronologically. */
 export function groupByDate(activities: Activity[]): DateGroup[] {
   const map = new Map<string, Activity[]>();
 

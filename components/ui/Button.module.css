@@ -4,7 +4,6 @@
   cursor: pointer;
 }
 
-/* ── Primary ── */
 .primary {
   padding: var(--space-3) var(--space-6);
   border-radius: var(--radius-full);
@@ -25,7 +24,6 @@
   cursor: not-allowed;
 }
 
-/* ── Secondary ── */
 .secondary {
   padding: var(--space-3) var(--space-6);
   border-radius: var(--radius-full);
@@ -46,7 +44,6 @@
   color: var(--color-accent);
 }
 
-/* ── Icon ── */
 .icon {
   display: flex;
   align-items: center;

@@ -116,7 +116,6 @@ export default function BookingModal({
         className={styles.panel}
         tabIndex={-1}
       >
-        {/* ── Hero (shared across steps) ── */}
         <div className={styles.hero}>
           {showImage && activity.imageUrl ? (
             <Image
@@ -164,7 +163,6 @@ export default function BookingModal({
               <p className={styles.description}>{activity.description}</p>
             )}
 
-            {/* ── Capacity bar ── */}
             <div className={styles.capacity}>
               <span className={styles.capacityLabel}>
                 {availability === "sold-out"
@@ -186,7 +184,6 @@ export default function BookingModal({
               </div>
             </div>
 
-            {/* ── Form ── */}
             <form className={styles.form} onSubmit={handleSubmit} noValidate>
               <h3 className={styles.formTitle}>Reserveer een plek</h3>
 
@@ -274,7 +271,6 @@ export default function BookingModal({
             </form>
           </div>
         ) : (
-          /* ── Confirmation step ── */
           <div className={styles.body}>
             <div className={styles.confirmation} role="status">
               <div className={styles.confirmationIcon} aria-hidden="true">

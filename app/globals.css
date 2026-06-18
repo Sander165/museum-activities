@@ -1,6 +1,4 @@
-/* ─── Design tokens ─────────────────────────────────────────── */
 :root {
-  /* Colours */
   --color-bg: #faf4ea;
   --color-surface: #fffdf9;
   --color-border: #ece0cf;
@@ -11,13 +9,11 @@
   --color-accent-soft: #fbeadf;
   --color-gold: #c98a1e;
 
-  /* Type-badge colours */
   --badge-rondleiding: #a8431a;
   --badge-workshop: #9a6410;
   --badge-lezing: #5a6b2f;
   --badge-kinderprogramma: #9c3b63;
 
-  /* Spacing */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -29,7 +25,6 @@
   --space-12: 48px;
   --space-16: 64px;
 
-  /* Typography */
   --font-sans: var(--font-geist), system-ui, sans-serif;
   --font-serif: var(--font-fraunces), Georgia, serif;
   --text-xs: 0.75rem;
@@ -41,23 +36,19 @@
   --text-3xl: 1.875rem;
   --text-4xl: 2.25rem;
 
-  /* Radii */
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-full: 9999px;
 
-  /* Shadows */
   --shadow-sm: 0 1px 3px rgb(60 40 20 / 0.06), 0 1px 2px rgb(60 40 20 / 0.04);
   --shadow-md: 0 6px 18px rgb(60 40 20 / 0.1), 0 2px 6px rgb(60 40 20 / 0.06);
   --shadow-lg: 0 18px 50px rgb(40 25 12 / 0.18), 0 6px 16px rgb(40 25 12 / 0.1);
 
-  /* Layout */
   --content-max-width: 980px;
   --content-padding: var(--space-6);
 }
 
-/* ─── Reset / base ──────────────────────────────────────────── */
 *,
 *::before,
 *::after {
@@ -95,7 +86,6 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
-/* ─── Utility ───────────────────────────────────────────────── */
 .sr-only {
   position: absolute;
   width: 1px;

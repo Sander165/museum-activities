@@ -28,7 +28,6 @@
   transform: none;
 }
 
-/* ── Image ── */
 .imageWrap {
   position: relative;
   flex-shrink: 0;
@@ -46,7 +45,6 @@
   left: var(--space-3);
 }
 
-/* ── Body ── */
 .body {
   padding: var(--space-5) var(--space-6);
   display: flex;
@@ -56,7 +54,6 @@
   min-width: 0;
 }
 
-/* ── Meta row ── */
 .meta {
   display: flex;
   align-items: center;
@@ -69,7 +66,6 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* ── Content ── */
 .title {
   font-family: var(--font-serif);
   font-size: var(--text-xl);
@@ -85,7 +81,6 @@
   line-height: 1.65;
 }
 
-/* ── Footer ── */
 .footer {
   display: flex;
   align-items: center;
@@ -112,7 +107,6 @@
   color: var(--color-text-muted);
 }
 
-/* ── Availability ── */
 .available {
   font-size: var(--text-sm);
   color: var(--color-text-muted);
@@ -136,13 +130,11 @@
   border-radius: var(--radius-full);
 }
 
-/* ── Book button (layout override) ── */
 .bookButton {
   flex-shrink: 0;
   padding: var(--space-2) var(--space-5);
 }
 
-/* ── Mobile: stack image above body ── */
 @media (max-width: 600px) {
   .card {
     flex-direction: column;
