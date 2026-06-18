@@ -1,5 +1,6 @@
+import Image from "next/image";
 import type { Activity } from "@/types/activity";
-import { getAvailability, pluraliseSpots } from "@/utils/activities";
+import { getAvailability } from "@/utils/activities";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import LocationPinIcon from "@/components/ui/icons/LocationPinIcon";
@@ -13,19 +14,62 @@ interface ActivityCardProps {
 export default function ActivityCard({ activity, onBook }: ActivityCardProps) {
   const availability = getAvailability(activity);
   const isSoldOut = availability === "sold-out";
+  const isAlmostFull = availability === "almost-full";
+
+  function renderAvailability() {
+    if (isSoldOut) {
+      return <span className={styles.soldOut}>Uitverkocht</span>;
+    }
+    if (isAlmostFull) {
+      return (
+        <span className={styles.almostFull}>
+          Nog {activity.availableSpots}{" "}
+          {activity.availableSpots === 1 ? "plek" : "plekken"}
+        </span>
+      );
+    }
+    return (
+      <span className={styles.available}>
+        {activity.availableSpots} van {activity.capacity} plekken beschikbaar
+      </span>
+    );
+  }
 
   return (
     <article
       className={`${styles.card} ${isSoldOut ? styles.cardSoldOut : ""}`}
       aria-label={activity.title}
     >
+      {activity.imageUrl && (
+        <div className={styles.imageWrap}>
+          <Image
+            src={activity.imageUrl}
+            alt=""
+            fill
+            sizes="(max-width: 600px) 100vw, 280px"
+            className={styles.image}
+          />
+          <div className={styles.imageBadge}>
+            <Badge type={activity.type} />
+          </div>
+        </div>
+      )}
+
       <div className={styles.body}>
-        <div className={styles.meta}>
-          <Badge type={activity.type} />
+        {!activity.imageUrl && (
+          <div className={styles.meta}>
+            <Badge type={activity.type} />
+            <time className={styles.time}>
+              {activity.startTime} – {activity.endTime}
+            </time>
+          </div>
+        )}
+
+        {activity.imageUrl && (
           <time className={styles.time}>
             {activity.startTime} – {activity.endTime}
           </time>
-        </div>
+        )}
 
         <h3 className={styles.title}>{activity.title}</h3>
 
@@ -39,17 +83,7 @@ export default function ActivityCard({ activity, onBook }: ActivityCardProps) {
               <LocationPinIcon />
               {activity.location}
             </span>
-            {isSoldOut ? (
-              <span className={styles.soldOut}>Uitverkocht</span>
-            ) : availability === "almost-full" ? (
-              <span className={styles.almostFull}>
-                Nog {pluraliseSpots(activity.availableSpots)}
-              </span>
-            ) : (
-              <span className={styles.available}>
-                {activity.availableSpots} van {activity.capacity} plekken beschikbaar
-              </span>
-            )}
+            {renderAvailability()}
           </div>
 
           <Button
@@ -57,6 +91,7 @@ export default function ActivityCard({ activity, onBook }: ActivityCardProps) {
             className={styles.bookButton}
             onClick={() => onBook(activity)}
             disabled={isSoldOut}
+            aria-disabled={isSoldOut}
           >
             {isSoldOut ? "Vol" : "Reserveer"}
           </Button>

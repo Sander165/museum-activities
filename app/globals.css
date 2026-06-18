@@ -1,19 +1,21 @@
 /* ─── Design tokens ─────────────────────────────────────────── */
 :root {
   /* Colours */
-  --color-bg: #faf9f7;
-  --color-surface: #ffffff;
-  --color-border: #e8e4df;
-  --color-text: #1a1917;
-  --color-text-muted: #6b6560;
-  --color-accent: #c8410b; /* CTA / sold-out */
-  --color-accent-hover: #a63408;
+  --color-bg: #faf4ea;
+  --color-surface: #fffdf9;
+  --color-border: #ece0cf;
+  --color-text: #2a211b;
+  --color-text-muted: #7c6a59;
+  --color-accent: #c2410c;
+  --color-accent-hover: #9a330a;
+  --color-accent-soft: #fbeadf;
+  --color-gold: #c98a1e;
 
   /* Type-badge colours */
-  --badge-rondleiding: #1d4ed8;
-  --badge-workshop: #6d28d9;
-  --badge-lezing: #065f46;
-  --badge-kinderprogramma: #b45309;
+  --badge-rondleiding: #a8431a;
+  --badge-workshop: #9a6410;
+  --badge-lezing: #5a6b2f;
+  --badge-kinderprogramma: #9c3b63;
 
   /* Spacing */
   --space-1: 4px;
@@ -29,6 +31,7 @@
 
   /* Typography */
   --font-sans: var(--font-geist), system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), Georgia, serif;
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-base: 1rem;
@@ -45,12 +48,12 @@
   --radius-full: 9999px;
 
   /* Shadows */
-  --shadow-sm: 0 1px 3px rgb(0 0 0 / 0.06), 0 1px 2px rgb(0 0 0 / 0.04);
-  --shadow-md: 0 4px 12px rgb(0 0 0 / 0.08), 0 2px 4px rgb(0 0 0 / 0.05);
-  --shadow-lg: 0 16px 48px rgb(0 0 0 / 0.14), 0 4px 12px rgb(0 0 0 / 0.08);
+  --shadow-sm: 0 1px 3px rgb(60 40 20 / 0.06), 0 1px 2px rgb(60 40 20 / 0.04);
+  --shadow-md: 0 6px 18px rgb(60 40 20 / 0.1), 0 2px 6px rgb(60 40 20 / 0.06);
+  --shadow-lg: 0 18px 50px rgb(40 25 12 / 0.18), 0 6px 16px rgb(40 25 12 / 0.1);
 
   /* Layout */
-  --content-max-width: 860px;
+  --content-max-width: 980px;
   --content-padding: var(--space-6);
 }
 

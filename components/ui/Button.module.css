@@ -21,7 +21,7 @@
 }
 
 .primary:disabled {
-  background: #c4bdb6;
+  background: #d4c9bc;
   cursor: not-allowed;
 }
 
@@ -34,12 +34,16 @@
   color: var(--color-text);
   font-size: var(--text-sm);
   font-weight: 600;
-  transition: border-color 150ms ease, background 150ms ease;
+  transition:
+    border-color 150ms ease,
+    background 150ms ease,
+    color 150ms ease;
 }
 
 .secondary:hover {
-  border-color: var(--color-text);
-  background: var(--color-bg);
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
 }
 
 /* ── Icon ── */
@@ -52,7 +56,9 @@
   border-radius: var(--radius-full);
   background: transparent;
   color: var(--color-text-muted);
-  transition: background 150ms ease, color 150ms ease;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
 }
 
 .icon:hover {

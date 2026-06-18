@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import type { Activity } from "@/types/activity";
 import { getAvailability, pluraliseSpots } from "@/utils/activities";
 import { capitalise } from "@/utils/string";
@@ -113,62 +114,72 @@ export default function BookingModal({
         className={styles.panel}
         tabIndex={-1}
       >
-        {/* ── Close button ── */}
-        <Button
-          variant="icon"
-          className={styles.closeButton}
-          onClick={handleClose}
-          aria-label="Sluit venster"
-        >
-          <CloseIcon />
-        </Button>
+        {/* ── Hero (shared across steps) ── */}
+        <div className={styles.hero}>
+          {activity.imageUrl ? (
+            <Image
+              src={activity.imageUrl}
+              alt=""
+              fill
+              sizes="560px"
+              className={styles.heroImage}
+            />
+          ) : (
+            <div className={styles.heroFallback} aria-hidden="true" />
+          )}
+          <div className={styles.heroScrim} aria-hidden="true" />
 
-        {step === "form" ? (
-          <>
-            {/* ── Activity detail ── */}
-            <div className={styles.detail}>
-              <div className={styles.detailMeta}>
-                <Badge type={activity.type} />
-                <span className={styles.detailDate}>
-                  {dateLabel} · {activity.startTime} – {activity.endTime}
-                </span>
-              </div>
+          <Button
+            variant="icon"
+            className={styles.closeButton}
+            onClick={handleClose}
+            aria-label="Sluit venster"
+          >
+            <CloseIcon />
+          </Button>
 
-              <h2 id="modal-title" className={styles.detailTitle}>
-                {activity.title}
-              </h2>
-
-              <p className={styles.detailLocation}>
+          <div className={styles.heroContent}>
+            <Badge type={activity.type} />
+            <h2 id="modal-title" className={styles.heroTitle}>
+              {activity.title}
+            </h2>
+            <div className={styles.heroMeta}>
+              <span>
+                {dateLabel} · {activity.startTime} – {activity.endTime}
+              </span>
+              <span className={styles.heroLocation}>
                 <LocationPinIcon width={13} height={13} />
                 {activity.location}
-              </p>
+              </span>
+            </div>
+          </div>
+        </div>
 
-              {activity.description && (
-                <p className={styles.detailDescription}>
-                  {activity.description}
-                </p>
-              )}
+        {step === "form" ? (
+          <div className={styles.body}>
+            {activity.description && (
+              <p className={styles.description}>{activity.description}</p>
+            )}
 
-              {/* ── Capacity bar ── */}
-              <div className={styles.capacity}>
-                <span className={styles.capacityLabel}>
-                  {availability === "sold-out"
-                    ? "Uitverkocht"
-                    : `${activity.availableSpots} van ${activity.capacity} plekken beschikbaar`}
-                </span>
+            {/* ── Capacity bar ── */}
+            <div className={styles.capacity}>
+              <span className={styles.capacityLabel}>
+                {availability === "sold-out"
+                  ? "Uitverkocht"
+                  : `${activity.availableSpots} van ${activity.capacity} plekken beschikbaar`}
+              </span>
+              <div
+                className={styles.capacityBar}
+                role="meter"
+                aria-valuenow={activity.capacity - activity.availableSpots}
+                aria-valuemin={0}
+                aria-valuemax={activity.capacity}
+                aria-label="Bezetting"
+              >
                 <div
-                  className={styles.capacityBar}
-                  role="meter"
-                  aria-valuenow={activity.capacity - activity.availableSpots}
-                  aria-valuemin={0}
-                  aria-valuemax={activity.capacity}
-                  aria-label="Bezetting"
-                >
-                  <div
-                    className={styles.capacityFill}
-                    style={{ width: `${capacityPercent}%` }}
-                  />
-                </div>
+                  className={styles.capacityFill}
+                  style={{ width: `${capacityPercent}%` }}
+                />
               </div>
             </div>
 
@@ -222,14 +233,14 @@ export default function BookingModal({
                 )}
               </div>
 
-              <div className={styles.field}>
+              <div className={`${styles.field} ${styles.fieldNarrow}`}>
                 <label htmlFor="booking-party-size" className={styles.label}>
                   Aantal personen
                 </label>
                 <input
                   id="booking-party-size"
                   type="number"
-                  className={`${styles.input} ${styles.inputNarrow} ${errors.partySize ? styles.inputError : ""}`}
+                  className={`${styles.input} ${errors.partySize ? styles.inputError : ""}`}
                   min={1}
                   max={activity.availableSpots}
                   value={partySize}
@@ -245,7 +256,11 @@ export default function BookingModal({
                 )}
               </div>
 
-              <Button type="submit" className={styles.submitButton}>
+              <Button
+                type="submit"
+                variant="primary"
+                className={styles.submitButton}
+              >
                 Bevestig reservering
               </Button>
 
@@ -254,43 +269,59 @@ export default function BookingModal({
                 uur van tevoren.
               </p>
             </form>
-          </>
+          </div>
         ) : (
           /* ── Confirmation step ── */
-          <div className={styles.confirmation} role="status">
-            <div className={styles.confirmationIcon} aria-hidden="true">
-              ✓
-            </div>
-            <h2
-              ref={confirmHeadingRef}
-              id="modal-title"
-              className={styles.confirmationTitle}
-              tabIndex={-1}
-            >
-              Reservering bevestigd!
-            </h2>
+          <div className={styles.body}>
+            <div className={styles.confirmation} role="status">
+              <div className={styles.confirmationIcon} aria-hidden="true">
+                ✓
+              </div>
+              <h3
+                ref={confirmHeadingRef}
+                className={styles.confirmationTitle}
+                tabIndex={-1}
+              >
+                Reservering bevestigd!
+              </h3>
 
-            <div className={styles.confirmationSummary}>
-              <p className={styles.confirmationActivityTitle}>
-                {activity.title}
-              </p>
-              <p className={styles.confirmationMeta}>
-                {dateLabel} · {activity.startTime} – {activity.endTime}
-              </p>
-              <p className={styles.confirmationMeta}>
-                {partySize} {partySize === 1 ? "persoon" : "personen"} ·{" "}
-                {activity.location}
-              </p>
+              <dl className={styles.summary}>
+                <div className={styles.summaryRow}>
+                  <dt className={styles.summaryTerm}>Wanneer</dt>
+                  <dd className={styles.summaryValue}>
+                    {dateLabel} · {activity.startTime} – {activity.endTime}
+                  </dd>
+                </div>
+                <div className={styles.summaryRow}>
+                  <dt className={styles.summaryTerm}>Waar</dt>
+                  <dd className={styles.summaryValue}>{activity.location}</dd>
+                </div>
+                <div className={styles.summaryRow}>
+                  <dt className={styles.summaryTerm}>Personen</dt>
+                  <dd className={styles.summaryValue}>
+                    {partySize} {partySize === 1 ? "persoon" : "personen"}
+                  </dd>
+                </div>
+              </dl>
+
               <p className={styles.confirmationEmail}>
                 Een bevestiging is verstuurd naar <strong>{email}</strong>
               </p>
             </div>
 
             <div className={styles.confirmationActions}>
-              <Button variant="secondary" onClick={handleClose}>
+              <Button
+                variant="secondary"
+                className={styles.actionButton}
+                onClick={handleClose}
+              >
                 Terug naar overzicht
               </Button>
-              <Button variant="primary" onClick={handleClose}>
+              <Button
+                variant="primary"
+                className={styles.actionButton}
+                onClick={handleClose}
+              >
                 Nog een activiteit
               </Button>
             </div>
