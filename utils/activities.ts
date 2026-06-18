@@ -1,6 +1,16 @@
 import type { Activity } from "@/types/activity";
 import { formatDutchDate } from "@/utils/date";
 
+export type AvailabilityState = "available" | "almost-full" | "sold-out";
+
+const ALMOST_FULL_THRESHOLD = 3;
+
+export function getAvailability(activity: Activity): AvailabilityState {
+  if (activity.availableSpots === 0) return "sold-out";
+  if (activity.availableSpots <= ALMOST_FULL_THRESHOLD) return "almost-full";
+  return "available";
+}
+
 export type DateGroup = {
   date: string; // ISO "YYYY-MM-DD"
   label: string; // "zaterdag 20 juni 2026"
