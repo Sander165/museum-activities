@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import activitiesData from "@/data/activities.json";
 import type { ActivitiesData } from "@/types/activity";
 import Header from "@/components/Header/Header";
@@ -10,7 +11,9 @@ export default function Home() {
     <>
       <Header />
       <main>
-        <ActivityBrowser initialActivities={activities} />
+        <Suspense>
+          <ActivityBrowser initialActivities={activities} />
+        </Suspense>
       </main>
     </>
   );

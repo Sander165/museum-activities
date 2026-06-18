@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import type { Activity } from "@/types/activity";
-import TypeFilter, {
-  type FilterValue,
-} from "@/components/TypeFilter/TypeFilter";
+import TypeFilter from "@/components/TypeFilter/TypeFilter";
+import DateFilter from "@/components/DateFilter";
 import ActivityList from "@/components/ActivityList/ActivityList";
 import BookingModal, {
   type BookingDetails,
@@ -19,19 +19,31 @@ export default function ActivityBrowser({
   initialActivities,
 }: ActivityBrowserProps) {
   const [activities, setActivities] = useState<Activity[]>(initialActivities);
-  const [activeFilter, setActiveFilter] = useState<FilterValue>("all");
-  const [selectedActivity, setSelectedActivity] = useState<Activity | null>(
-    null,
+  const searchParams = useSearchParams();
+
+  const today = new Date().toISOString().slice(0, 10);
+  const nextWeek = (() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 7);
+    return d.toISOString().slice(0, 10);
+  })();
+
+  const typeParam = searchParams.get("type");
+  const from = searchParams.get("from") ?? today;
+  const to = searchParams.get("to") ?? nextWeek;
+  const modalId = searchParams.get("modal");
+
+  const visible = activities.filter(
+    (a) =>
+      (!typeParam || a.type === typeParam) &&
+      a.date >= from &&
+      a.date <= to,
   );
 
-  const visible =
-    activeFilter === "all"
-      ? activities
-      : activities.filter((a) => a.type === activeFilter);
-
-  function handleBook(activity: Activity) {
-    setSelectedActivity(activity);
-  }
+  const selectedActivity =
+    modalId !== null
+      ? (activities.find((a) => a.id === modalId) ?? null)
+      : null;
 
   function handleConfirm({ activity, partySize }: BookingDetails) {
     setActivities((prev) =>
@@ -43,29 +55,17 @@ export default function ActivityBrowser({
     );
   }
 
-  function handleClose() {
-    setSelectedActivity(null);
-  }
-
-  // Keep the modal in sync with updated spot counts
-  const liveActivity = selectedActivity
-    ? (activities.find((a) => a.id === selectedActivity.id) ?? selectedActivity)
-    : null;
-
   return (
     <div className={styles.browser}>
       <div className={styles.controls}>
-        <TypeFilter active={activeFilter} onChange={setActiveFilter} />
+        <TypeFilter />
+        <DateFilter />
       </div>
 
-      <ActivityList activities={visible} onBook={handleBook} />
+      <ActivityList activities={visible} />
 
-      {liveActivity && (
-        <BookingModal
-          activity={liveActivity}
-          onConfirm={handleConfirm}
-          onClose={handleClose}
-        />
+      {selectedActivity && (
+        <BookingModal activity={selectedActivity} onConfirm={handleConfirm} />
       )}
     </div>
   );
